@@ -139,8 +139,8 @@ export default {
         script: that.script
       }).then(function (res) {
         console.log(res)
-        that.result = JSON.stringify(res.data, undefined, 4)
-        that.cpuTimeUsed += res.header('x-cryptoflipto-cputime')
+        that.result = JSON.stringify(res.data.result, undefined, 4)
+        that.cpuTimeUsed += res.data.cpuTimeUsed
         that.loadingResult = false
         that.hasResult = true
       }).catch(function (e) {
