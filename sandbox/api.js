@@ -10,13 +10,20 @@ module.exports = {
   	console.log(`GETTING ASSET: ${asset}`)
   	var response = JSON.parse(request('GET', `${cryptowatch}/assets/${asset}`).getBody('utf8'))
   	this._cpuTimeUsed += response.allowance.cost
-  	return response.result
+  	return response.result.markets.base.map(function (result) {
+      return {
+        market: result.exchange,
+        pair: result.pair
+      }
+    })
   },
   getMarket: function(market) {
   	console.log(`GETTING MARKET: ${market}`)
   	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}`).getBody('utf8'))
   	this._cpuTimeUsed += response.allowance.cost
-  	return response.result
+  	return response.result.map(function (result) {
+      return result.pair
+    })
   },
   getPrice: function(pair, market) {
   	console.log(`GETTING PRICE FOR: ${pair} AT ${market}`)
