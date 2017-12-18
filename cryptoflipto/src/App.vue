@@ -10,7 +10,7 @@
           <v-container fluid>
             <router-view></router-view>
             <v-footer class="l">
-              <div>Hacked up by <a href=https://github.com/2PacIsAlive>Jared Jolton</a>. Contact: jared@willbitcoincostmoretomorrow.cool</div>
+              <div>Created by <a href=https://github.com/2PacIsAlive>Jared Jolton</a>. Contact: jared@willbitcoincostmoretomorrow.cool</div>
             </v-footer>
             <v-footer dark class="l">
               <div>Donate: <a href="bitcoin:1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc">1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc</a></div>

@@ -5,6 +5,7 @@
         <div>
           <h3 class="headline mb-0">crypto&#607;l&#7433;d&#647;o</h3>
           <div>flip yo crypto like a pro</div>
+	  <div>CPU time used: {{ cpuTimeUsed }} nanoseconds</div>
         </div>
       </v-card-title>
       <v-card-text>
@@ -20,16 +21,7 @@
         </template>
 	<template>
           <v-container fluid>
-            <v-card hover>
-              <v-card-title secondary-title>
-                <div>
-                  script:
-                </div>
-              </v-card-title>
-              <v-card-text>
-                <codemirror v-model="script" :options="getOptions(false)" @ready="onCmReady"></codemirror>
-              </v-card-text>
-            </v-card>
+            <codemirror v-model="script" :options="getOptions(false)" @ready="onCmReady"></codemirror>
           </v-container>  
           <v-container v-if="hasResult">
             <v-card hover>
@@ -66,6 +58,7 @@ export default {
   name: 'Editor',
   data () {
     return {
+      cpuTimeUsed: 0,
       script: `module.exports = function() {
   const capital = 100.00
   const prices = {
