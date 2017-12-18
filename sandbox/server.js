@@ -21,7 +21,7 @@ app.post('/script', (req, res) => {
   try {
   	var result = sandbox.execute(req.body.script)
   } catch (e) {
-  	var result = JSON.stringify(e)
+  	var result = e.message
   }
   res.json(result)
 })

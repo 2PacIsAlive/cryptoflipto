@@ -134,7 +134,7 @@ export default {
       const that = this
       that.loadingResult = true
       console.log(`deploying: ${that.code}`)
-      axios.post('http://0.0.0.0:49161/script', {
+      axios.post('http://cryptoflipto.cool/api/script', {
         script: that.code
       }).then(function (res) {
         console.log(res)
