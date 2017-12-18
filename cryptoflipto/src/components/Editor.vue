@@ -39,7 +39,7 @@
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat outline>api docs</v-btn>
+        <v-btn flat outline @click.native="toApiDocs()">api docs</v-btn>
         <v-spacer/>
         <v-btn secondary outline>test</v-btn>
         <v-btn :loading="loadingResult" @click.native="deploy()" outline>deploy</v-btn>
@@ -134,7 +134,7 @@ export default {
         height: '1000%'
       }
     },
-    goToApiDocs () {
+    toApiDocs () {
       this.$router.push('/apiDocs')
     },
     deploy () {

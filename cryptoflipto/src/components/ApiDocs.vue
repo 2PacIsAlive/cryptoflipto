@@ -4,7 +4,7 @@
     <v-card hover dark>
       <v-card-title primary-title>
         <div>
-          <h3 class="headline mb-0">crypto&#607;l&#7433;d&#647;o</h3>
+          <h3 class="headline mb-0">crypto&#607;l&#7433;d&#647;o <small>api docs</small></h3>
           <div>flip yo crypto like a pro</div>
         </div>
       </v-card-title>
@@ -20,13 +20,13 @@
               </div>
             </v-card-title>
             <v-card-text>
-              <codemirror v-model="method.example" :options="getOptions(false)"></codemirror>
+              <codemirror v-model="method.example" :options="getOptions(false)" @ready="setSize"></codemirror>
             </v-card-text>
           </v-card>
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat outline @click.native="this.$router.push('/')">write script</v-btn>
+        <v-btn flat outline @click.native="toRoot()">write script</v-btn>
         <v-spacer/>
       </v-card-actions>
     </v-card>
@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript.js'
@@ -47,9 +46,9 @@ export default {
     return {
       api: [
         {
-          "name": "getPrice(pair, market)",
-          "example": `api.getPrice("btcusd", "gdax")`,
-          "description": "Retrieve the last price for a given pair at a particular market"
+          name: 'getPrice(pair, market)',
+          example: `api.getPrice("btcusd", "gdax")\n12533`,
+          description: 'Retrieve the last price for a given pair at a particular market'
         }
       ]
     }
@@ -58,6 +57,12 @@ export default {
     codemirror
   },
   methods: {
+    toRoot () {
+      this.$router.push('/')
+    },
+    setSize (cm) {
+      cm.setSize(null, '100%')
+    },
     getOptions (readOnly) {
       return {
         lineWrapping: true,
