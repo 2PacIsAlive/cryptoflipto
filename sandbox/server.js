@@ -19,12 +19,15 @@ app.disable('x-powered-by')
 
 app.post('/script', (req, res) => {
   try {
-  	var result = sandbox.execute(req.body.script)
+  	var execution = sandbox.execute(req.body.script)
+  	var result = execution.result
+  	var cpuTimeUsed = execution.cpuTimeUsed
   } catch (e) {
   	var result = e.message
+  	var cpuTimeUsed = 0
   }
   res.json({
-  	result: result.result,
+  	result: result,
   	cpuTimeUsed: cpuTimeUsed
   })
 })
