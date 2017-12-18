@@ -8,8 +8,8 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <div>
-          <v-container v-if="loadingResult">
+        <template v-if="loadingResult">
+          <v-container>
             <div class="loading">
               <div class="loading-bar"></div>
               <div class="loading-bar"></div>
@@ -17,22 +17,24 @@
               <div class="loading-bar"></div>
             </div>
           </v-container>
-          <v-container v-else fluid>
+        </template>
+	<template v-else>
+          <v-container fluid>
             <codemirror v-model="code" :options="getOptions(false)" @ready="onCmReady"></codemirror>
           </v-container>  
-        </div>
-        <v-container v-if="hasResult">
-          <v-card hover>
-            <v-card-title secondary-title>
-              <div>
-                result:
-              </div>
-            </v-card-title>
-            <v-card-text>
-              <codemirror v-model="result" :options="getOptions(true)"></codemirror>
-            </v-card-text>
-          </v-card>
-        </v-container>
+          <v-container v-if="hasResult">
+            <v-card hover>
+              <v-card-title secondary-title>
+                <div>
+                  result:
+                </div>
+              </v-card-title>
+              <v-card-text>
+                <codemirror v-model="result" :options="getOptions(true)"></codemirror>
+              </v-card-text>
+            </v-card>
+          </v-container>
+        </template>
       </v-card-text>
       <v-card-actions>
         <v-btn flat outline>api docs</v-btn>
