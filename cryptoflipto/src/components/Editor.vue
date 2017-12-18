@@ -18,9 +18,18 @@
             </div>
           </v-container>
         </template>
-	<template v-else>
+	      <template v-else>
           <v-container fluid>
-            <codemirror v-model="code" :options="getOptions(false)" @ready="onCmReady"></codemirror>
+            <v-card hover>
+              <v-card-title secondary-title>
+                <div>
+                  script:
+                </div>
+              </v-card-title>
+              <v-card-text>
+                <codemirror v-model="script" :options="getOptions(false)" @ready="onCmReady"></codemirror>
+              </v-card-text>
+            </v-card>
           </v-container>  
           <v-container v-if="hasResult">
             <v-card hover>
@@ -57,7 +66,7 @@ export default {
   name: 'Editor',
   data () {
     return {
-      code: `module.exports = function() {
+      script: `module.exports = function() {
   const capital = 100.00
   const prices = {
     ltcusd: {
