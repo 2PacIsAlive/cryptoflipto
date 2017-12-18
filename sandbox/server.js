@@ -23,7 +23,8 @@ app.post('/script', (req, res) => {
   } catch (e) {
   	var result = e.message
   }
-  res.json(result)
+  res.header("x-cryptoflipto-cputime", result.cpuTimeUsed)
+  res.json(result.result)
 })
 
 app.listen(PORT, HOST)

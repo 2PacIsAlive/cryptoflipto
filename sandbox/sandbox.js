@@ -10,6 +10,10 @@ module.exports = {
     })
     const sandboxFunction = new VMScript(script)
     executor = vm.run(sandboxFunction)
-    return executor()
+    cpuTimeUsed = vm.run('api._cpuTimeUsed')
+    return {
+      result: executor(),
+      cpuTimeUsed: cpuTimeUsed
+    }	
   }
 }

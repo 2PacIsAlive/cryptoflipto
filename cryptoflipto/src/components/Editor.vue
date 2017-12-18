@@ -140,6 +140,7 @@ export default {
       }).then(function (res) {
         console.log(res)
         that.result = JSON.stringify(res.data, undefined, 4)
+        that.cpuTimeUsed += res.header('x-cryptoflipto-cputime')
         that.loadingResult = false
         that.hasResult = true
       }).catch(function (e) {
