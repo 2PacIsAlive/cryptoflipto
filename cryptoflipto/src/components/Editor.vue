@@ -1,13 +1,5 @@
 <template>
   <div class="editor">
-    <v-container v-if="loadingResult">
-      <div class="loading">
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-      </div>
-    </v-container>
     <v-card hover dark>
       <v-card-title primary-title>
         <div>
@@ -17,7 +9,15 @@
       </v-card-title>
       <v-card-text>
         <div>
-          <v-container fluid>
+          <v-container v-if="loadingResult">
+            <div class="loading">
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+            </div>
+          </v-container>
+          <v-container v-else fluid>
             <codemirror v-model="code" :options="getOptions(false)" @ready="onCmReady"></codemirror>
           </v-container>  
         </div>

@@ -16,7 +16,7 @@
               <div>Donate: <a href="bitcoin:1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc">1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc</a></div>
             </v-footer>
             <v-footer class="l">
-              <div v-html="disclaimer"></div>
+              <div>Powered by <a href="https://api.cryptowat.ch/">cryptowat.ch</a></div>
             </v-footer>
             <v-footer dark class="l">
               <div>Coming soon: Use <a href="http://github.com/2PacIsAlive/nethub">nethub</a> to build your own bitcoin-price predicting neural networks!</div>
@@ -35,7 +35,7 @@ export default {
   name: 'app',
   data () {
     return {
-      disclaimer: 'Disclaimer: This website does not provide investment or trading advice.'
+
     }
   },
   mounted () {
