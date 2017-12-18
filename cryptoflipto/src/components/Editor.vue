@@ -8,7 +8,7 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <template v-if="loadingResult">
+        <template v-if="loadingResultDISABLED">
           <v-container>
             <div class="loading">
               <div class="loading-bar"></div>
@@ -18,7 +18,7 @@
             </div>
           </v-container>
         </template>
-	      <template v-else>
+	<template>
           <v-container fluid>
             <v-card hover>
               <v-card-title secondary-title>
@@ -49,7 +49,7 @@
         <v-btn flat outline>api docs</v-btn>
         <v-spacer/>
         <v-btn secondary outline>test</v-btn>
-        <v-btn @click.native="deploy()" outline>deploy</v-btn>
+        <v-btn :loading="loadingResult" @click.native="deploy()" outline>deploy</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -144,9 +144,9 @@ export default {
     deploy () {
       const that = this
       that.loadingResult = true
-      console.log(`deploying: ${that.code}`)
+      console.log(`deploying: ${that.script}`)
       axios.post('http://cryptoflipto.cool/api/script', {
-        script: that.code
+        script: that.script
       }).then(function (res) {
         console.log(res)
         that.result = JSON.stringify(res.data, undefined, 4)
