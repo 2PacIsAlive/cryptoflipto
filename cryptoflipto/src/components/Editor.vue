@@ -135,7 +135,7 @@ export default {
       }
     },
     toApiDocs () {
-      this.$router.push('/apiDocs')
+      this.$router.push('/docs')
     },
     deploy () {
       const that = this

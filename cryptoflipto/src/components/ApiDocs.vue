@@ -9,12 +9,10 @@
         </div>
       </v-card-title>
       <v-card-text>
-  	    <template v-for="method in api">
+        <template v-for="method in api">
           <v-card hover>
             <v-card-title primary-title>
-              <h3 class="headline mb-0">
-                {{ method.name }}
-              </h3>
+              <h3 class="headline mb-0" v-html="method.name"></h3> 
               <div>
                 {{ method.description }}
               </div>
@@ -23,6 +21,7 @@
               <codemirror v-model="method.example" :options="getOptions(false)" @ready="setSize"></codemirror>
             </v-card-text>
           </v-card>
+          <hr/>
         </template>
       </v-card-text>
       <v-card-actions>
@@ -46,9 +45,38 @@ export default {
     return {
       api: [
         {
-          name: 'getPrice(pair, market)',
+          name: '<pre><code>getPrice(<i>pair</i>, <i>market</i>)</code></pre>',
           example: `api.getPrice("btcusd", "gdax")\n12533`,
-          description: 'Retrieve the last price for a given pair at a particular market'
+          description: 'Retrieve the last price for the specified pair at the specified market'
+        }, {
+          name: '<pre><code>getMarket(<i>market</i>)</code></pre>',
+          example: `api.getMarket("gdax")
+[
+    "btcusd",
+    "btceur",
+    "btcgbp",
+    "ethusd",
+    "ethbtc",
+    "ltcusd",
+    "ltcbtc",
+    "etheur",
+    "ltceur"
+]`,
+          description: 'Retrieve a list of the pairs traded at the specified market'
+        }, {
+          name: '<pre><code>getAsset(<i>asset</i>)</code></pre>',
+          example: `api.getAsset("doge")
+[
+    {
+        "market": "kraken",
+        "pair": "dogebtc"
+    },
+    {
+        "market": "poloniex",
+        "pair": "dogebtc"
+    }
+]`,
+          description: 'Retrieve a list of markets and the pairs they trade for the specified asset'
         }
       ]
     }

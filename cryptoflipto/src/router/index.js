@@ -12,7 +12,7 @@ export default new Router({
       name: 'Editor',
       component: Editor
     }, {
-      path: '/apiDocs',
+      path: '/docs',
       name: 'ApiDocs',
       component: ApiDocs
     }
