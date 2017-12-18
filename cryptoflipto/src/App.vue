@@ -10,16 +10,7 @@
           <v-container fluid>
             <router-view></router-view>
             <v-footer class="l">
-              <div>Created by <a href=https://github.com/2PacIsAlive>Jared Jolton</a>. Contact: jared@willbitcoincostmoretomorrow.cool</div>
-            </v-footer>
-            <v-footer dark class="l">
-              <div>Donate: <a href="bitcoin:1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc">1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc</a></div>
-            </v-footer>
-            <v-footer class="l">
-              <div>Powered by <a href="https://api.cryptowat.ch/">cryptowat.ch</a></div>
-            </v-footer>
-            <v-footer dark class="l">
-              <div>Coming soon: Use <a href="http://github.com/2PacIsAlive/nethub">nethub</a> to build your own bitcoin-price predicting neural networks!</div>
+              <div>Powered by <a href="https://api.cryptowat.ch/">cryptowat.ch</a>, created by <a href=https://github.com/2PacIsAlive>Jared Jolton</a>. Contact: <a href="mailto:jared@willbitcoincostmoretomorrow.cool">jared@willbitcoincostmoretomorrow.cool</a>. Donate: <a href="bitcoin:1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc">1GmT5px2b5hJTH2Lssb56v3NBUbvu9YJXc</a>. Coming soon: Use <a href="http://github.com/2PacIsAlive/nethub">nethub</a> to build your own bitcoin-price predicting neural networks!</div>
             </v-footer>
           </v-container>
         </div>

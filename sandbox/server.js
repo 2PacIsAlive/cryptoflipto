@@ -26,10 +26,12 @@ app.post('/script', (req, res) => {
   	var result = e.message
   	var cpuTimeUsed = 0
   }
-  res.json({
-  	result: result,
-  	cpuTimeUsed: cpuTimeUsed
-  })
+  var response = {
+    result: result,
+    cpuTimeUsed: cpuTimeUsed
+  }
+  console.log(response)
+  res.json(response)
 })
 
 app.listen(PORT, HOST)

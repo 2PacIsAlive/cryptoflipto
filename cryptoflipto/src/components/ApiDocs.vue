@@ -1,29 +1,15 @@
 <template>
-  <div class="editor">
+  <div class="">
     <v-container>
     <v-card hover dark>
       <v-card-title primary-title>
         <div>
           <h3 class="headline mb-0">crypto&#607;l&#7433;d&#647;o</h3>
           <div>flip yo crypto like a pro</div>
-	  <div>CPU time used: {{ cpuTimeUsed }} nanoseconds</div>
         </div>
       </v-card-title>
       <v-card-text>
-        <template v-if="loadingResultDISABLED">
-          <v-container>
-            <div class="loading">
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-            </div>
-          </v-container>
-        </template>
 	<template>
-          <v-container fluid>
-            <codemirror v-model="script" :options="getOptions(false)" @ready="onCmReady"></codemirror>
-          </v-container>  
           <v-container v-if="hasResult">
             <v-card hover>
               <v-card-title secondary-title>
@@ -133,9 +119,6 @@ export default {
         width: '1000%',
         height: '1000%'
       }
-    },
-    goToApiDocs () {
-      this.$router.push('/apiDocs')
     },
     deploy () {
       const that = this
