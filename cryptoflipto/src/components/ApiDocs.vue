@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="apidocs">
     <v-container>
     <v-card hover dark>
       <v-card-title primary-title>
@@ -9,26 +9,25 @@
         </div>
       </v-card-title>
       <v-card-text>
-	<template>
-          <v-container v-if="hasResult">
-            <v-card hover>
-              <v-card-title secondary-title>
-                <div>
-                  result:
-                </div>
-              </v-card-title>
-              <v-card-text>
-                <codemirror v-model="result" :options="getOptions(true)"></codemirror>
-              </v-card-text>
-            </v-card>
-          </v-container>
+  	    <template v-for="method in api">
+          <v-card hover>
+            <v-card-title primary-title>
+              <h3 class="headline mb-0">
+                {{ method.name }}
+              </h3>
+              <div>
+                {{ method.description }}
+              </div>
+            </v-card-title>
+            <v-card-text>
+              <codemirror v-model="method.example" :options="getOptions(false)"></codemirror>
+            </v-card-text>
+          </v-card>
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat outline>api docs</v-btn>
+        <v-btn flat outline @click.native="this.$router.push('/')">write script</v-btn>
         <v-spacer/>
-        <v-btn secondary outline>test</v-btn>
-        <v-btn :loading="loadingResult" @click.native="deploy()" outline>deploy</v-btn>
       </v-card-actions>
     </v-card>
     </v-container>
@@ -43,63 +42,16 @@ import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/theme/mbo.css'
 
 export default {
-  name: 'Editor',
+  name: 'ApiDocs',
   data () {
     return {
-      loadingResultDISABLED: false,
-      cpuTimeUsed: 0,
-      script: `module.exports = function() {
-  const capital = 100.00
-  const prices = {
-    ltcusd: {
-      gdax: api.getPrice("ltcusd", "gdax")
-    }, 
-    btcusd: {
-      gdax: api.getPrice("btcusd", "gdax")
-    },
-    ltcbtc: {
-      kraken: api.getPrice("ltcbtc", "kraken")
-    }
-  }
-  const ltcQty = capital / prices.ltcusd.gdax
-  const btcQty = ltcQty * prices.ltcbtc.kraken
-  const usdQty = btcQty * prices.btcusd.gdax 
-  return {
-    trades: [
-      {
-        pair: "ltcusd",
-        side: "buy",
-        exchange: "gdax",
-        cost: capital,
-        quantity: ltcQty,
-        price: prices.ltcusd.gdax
-      },{
-        pair: "ltcbtc",
-        side: "sell",
-        exchange: "kraken",
-        quantity: btcQty,
-        cost: ltcQty,
-        price: prices.ltcbtc.kraken
-      }, {
-        pair: "btcusd",
-        side: "sell",
-        exchange: "gdax",
-        quantity: usdQty,
-        cost: btcQty,
-        price: prices.btcusd.gdax
-      }
-    ],  
-    result: {
-      asset: "usd",
-      quantity: usdQty,
-      profit: usdQty - capital,
-      exchange: "gdax"
-    } 
-  }
-}`,
-      result: null,
-      loadingResult: false,
-      hasResult: false
+      api: [
+        {
+          "name": "getPrice(pair, market)",
+          "example": `api.getPrice("btcusd", "gdax")`,
+          "description": "Retrieve the last price for a given pair at a particular market"
+        }
+      ]
     }
   },
   components: {
@@ -119,36 +71,6 @@ export default {
         width: '1000%',
         height: '1000%'
       }
-    },
-    deploy () {
-      const that = this
-      that.loadingResult = true
-      console.log(`deploying: ${that.script}`)
-      axios.post('http://cryptoflipto.cool/api/script', {
-        script: that.script
-      }).then(function (res) {
-        console.log(res)
-        that.result = JSON.stringify(res.data.result, undefined, 4)
-        that.cpuTimeUsed += res.data.cpuTimeUsed
-        that.loadingResult = false
-        that.hasResult = true
-      }).catch(function (e) {
-        console.log(e)
-        that.result = e.toString()
-        that.loadingResult = false
-        that.hasResult = true
-      })
-    },
-    onCmReady (cm) {
-      // cm.setSize('100%', null)
-      console.log('the editor is readied!', cm)
-    },
-    onCmFocus (cm) {
-      console.log('the editor is focus!', cm)
-    },
-    onCmCodeChange (newCode) {
-      console.log('this is new code', newCode)
-      this.code = newCode
     }
   }
 }
