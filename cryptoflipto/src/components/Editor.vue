@@ -1,6 +1,14 @@
 <template>
   <div class="editor">
-    <v-card dark>
+    <v-container v-if="loadingResult">
+      <div class="loading">
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+      </div>
+    </v-container>
+    <v-card hover dark>
       <v-card-title primary-title>
         <div>
           <h3 class="headline mb-0">crypto&#607;l&#7433;d&#647;o</h3>
@@ -9,32 +17,28 @@
       </v-card-title>
       <v-card-text>
         <div>
-          <codemirror v-model="code" :options="cmOptions"></codemirror>
+          <v-container fluid>
+            <codemirror v-model="code" :options="getOptions(false)" @ready="onCmReady"></codemirror>
+          </v-container>  
         </div>
-        <div v-if="loadingResult">
-          <div class="loading">
-            <div class="loading-bar"></div>
-            <div class="loading-bar"></div>
-            <div class="loading-bar"></div>
-            <div class="loading-bar"></div>
-          </div>
-        </div>
-        <div v-if="hasResult">
-          <v-card>
+        <v-container v-if="hasResult">
+          <v-card hover>
             <v-card-title secondary-title>
               <div>
                 result:
               </div>
             </v-card-title>
             <v-card-text>
-              <codemirror v-model="result" :options="cmOptions"></codemirror>
+              <codemirror v-model="result" :options="getOptions(true)"></codemirror>
             </v-card-text>
           </v-card>
-        </div>
+        </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat secondary>backtest</v-btn>
-        <v-btn @click.native="deploy()" secondary>deploy</v-btn>
+        <v-btn flat outline>api docs</v-btn>
+        <v-spacer/>
+        <v-btn secondary outline>test</v-btn>
+        <v-btn @click.native="deploy()" outline>deploy</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -51,23 +55,81 @@ export default {
   name: 'Editor',
   data () {
     return {
-      code: 'module.exports = function() {\n\treturn api.getPrice("btcusd", "gdax")\n}',
+      code: `module.exports = function() {
+  const capital = 100.00
+  const prices = {
+    ltcusd: {
+      gdax: api.getPrice("ltcusd", "gdax")
+    }, 
+    btcusd: {
+      gdax: api.getPrice("btcusd", "gdax")
+    },
+    ltcbtc: {
+      kraken: api.getPrice("ltcbtc", "kraken")
+    }
+  }
+  const ltcQty = capital / prices.ltcusd.gdax
+  const btcQty = ltcQty * prices.ltcbtc.kraken
+  const usdQty = btcQty * prices.btcusd.gdax 
+  return {
+    opportunity: {
+      trades: [
+        {
+          pair: "ltcusd",
+          side: "buy",
+          exchange: "gdax",
+          cost: capital,
+          quantity: ltcQty,
+          price: prices.ltcusd.gdax
+        },{
+          pair: "ltcbtc",
+          side: "sell",
+          exchange: "kraken",
+          quantity: btcQty,
+          cost: ltcQty,
+          price: prices.ltcbtc.kraken
+        }, {
+          pair: "btcusd",
+          side: "sell",
+          exchange: "gdax",
+          quantity: usdQty,
+          cost: btcQty,
+          price: prices.btcusd.gdax
+        }
+      ],  
+      result: {
+        asset: "usd",
+        quantity: usdQty,
+        profit: usdQty - capital,
+        exchange: "gdax"
+      }
+    }
+  }
+}
+      `,
       result: null,
       loadingResult: false,
-      hasResult: false,
-      cmOptions: {
-        tabSize: 2,
-        mode: 'text/javascript',
-        theme: 'mbo',
-        lineNumbers: true,
-        line: true
-      }
+      hasResult: false
     }
   },
   components: {
     codemirror
   },
   methods: {
+    getOptions (readOnly) {
+      return {
+        lineWrapping: true,
+        tabSize: 2,
+        mode: 'text/javascript',
+        theme: 'mbo',
+        lineNumbers: true,
+        line: true,
+        readOnly: readOnly,
+        float: 'center',
+        width: '1000%',
+        height: '1000%'
+      }
+    },
     deploy () {
       const that = this
       that.loadingResult = true
@@ -87,6 +149,7 @@ export default {
       })
     },
     onCmReady (cm) {
+      // cm.setSize('100%', '100%')
       console.log('the editor is readied!', cm)
     },
     onCmFocus (cm) {
@@ -121,9 +184,11 @@ a {
   color: #42b983;
 }
 .CodeMirror {
-  width: 100%;
   border: 1px solid #eee;
-  height: auto;
+  float: center; 
+  width: 100%; 
+  height: 100%;
+  viewportMargin: Infinity;
 }
 .loading {
   position: absolute;

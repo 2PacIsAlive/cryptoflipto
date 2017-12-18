@@ -2,7 +2,7 @@
   "name": "cryptoflipto",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Jared Jolton <jared@willbitcoincostmoretomorrow.cool>",
+  "author": "Jared Jolton <jared@cryptoflipto.cool>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

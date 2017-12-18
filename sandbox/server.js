@@ -2,6 +2,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const helmet = require('helmet')
 const cors = require('cors')
 const sandbox = require('./sandbox')
 
@@ -11,7 +12,10 @@ const HOST = '0.0.0.0'
 const app = express()
 
 app.use(bodyParser.json())
+app.use(helmet())
 app.use(cors())
+app.disable('x-powered-by')
+
 
 app.post('/script', (req, res) => {
   try {
@@ -19,7 +23,7 @@ app.post('/script', (req, res) => {
   } catch (e) {
   	var result = JSON.stringify(e)
   }
-  res.json({'result': result})
+  res.json(result)
 })
 
 app.listen(PORT, HOST)
