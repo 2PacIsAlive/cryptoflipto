@@ -10,7 +10,8 @@ export default new Router({
     {
       path: '/',
       name: 'Editor',
-      component: Editor
+      component: Editor,
+      props: (route) => ({ script: route.query.script })
     }, {
       path: '/docs',
       name: 'ApiDocs',

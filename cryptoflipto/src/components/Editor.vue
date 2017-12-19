@@ -22,7 +22,7 @@
         </template>
 	      <template>
           <v-container fluid>
-            <codemirror v-model="script" :options="getOptions(false)" @ready="onCmReady"></codemirror>
+            <codemirror v-model="scriptText" :options="getOptions(false)" @ready="onCmReady"></codemirror>
           </v-container>  
           <v-container v-if="hasResult">
             <v-card hover>
@@ -41,8 +41,14 @@
       <v-card-actions>
         <v-btn flat outline @click.native="toApiDocs()">api docs</v-btn>
         <v-spacer/>
-        <v-btn secondary outline>test</v-btn>
-        <v-btn :loading="loadingResult" @click.native="deploy()" outline>deploy</v-btn>
+        <v-btn secondary outline :loading="loadingResult" @click.native="testScript()">test</v-btn>
+        <template v-if="authenticated">
+          <v-btn v-if="authenticated" outline>deploy</v-btn>
+        </template>
+        <template v-else>  
+          <v-btn disabled outline slot="activator">authenticate to deploy</v-btn>
+        </v-tooltip>
+        </template>  
       </v-card-actions>
     </v-card>
     </v-container>
@@ -51,18 +57,20 @@
 
 <script>
 import axios from 'axios'
+import CodeMirror from 'codemirror'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript.js'
+import 'codemirror/addon/hint/javascript-hint.js'
+import 'codemirror/addon/hint/show-hint.js'
+import 'codemirror/addon/hint/show-hint.css'
 import 'codemirror/theme/mbo.css'
 
 export default {
   name: 'Editor',
-  data () {
-    return {
-      loadingResultDISABLED: false,
-      cpuTimeUsed: 0,
-      script: `module.exports = function() {
+  props: {
+    script: {
+      default: `module.exports = function() {
   const capital = 100.00
   const prices = {
     ltcusd: {
@@ -111,6 +119,15 @@ export default {
     } 
   }
 }`,
+      type: String
+    }
+  },
+  data () {
+    return {
+      loadingResultDISABLED: false,
+      cpuTimeUsed: 0,
+      scriptText: this.script,
+      authenticated: false,
       result: null,
       loadingResult: false,
       hasResult: false
@@ -131,18 +148,21 @@ export default {
         readOnly: readOnly,
         float: 'center',
         width: '1000%',
-        height: '1000%'
+        height: '1000%',
+        extraKeys: {
+          'Ctrl-Space': 'autocomplete'
+        }
       }
     },
     toApiDocs () {
       this.$router.push('/docs')
     },
-    deploy () {
+    testScript () {
       const that = this
       that.loadingResult = true
-      console.log(`deploying: ${that.script}`)
-      axios.post('http://cryptoflipto.cool/api/script', {
-        script: that.script
+      console.log(`deploying: ${that.scriptText}`)
+      axios.post('http://0.0.0.0:8082/script', {
+        script: that.scriptText
       }).then(function (res) {
         console.log(res)
         that.result = JSON.stringify(res.data.result, undefined, 4)
@@ -158,14 +178,12 @@ export default {
     },
     onCmReady (cm) {
       // cm.setSize('100%', null)
-      console.log('the editor is readied!', cm)
-    },
-    onCmFocus (cm) {
-      console.log('the editor is focus!', cm)
     },
     onCmCodeChange (newCode) {
-      console.log('this is new code', newCode)
-      this.code = newCode
+      // console.log(newCode)
+    },
+    onKeyEvent: function (e) {
+      CodeMirror.showHint(e)
     }
   }
 }
@@ -198,6 +216,17 @@ a {
   height: 100%;
   viewportMargin: Infinity;
 }
+.CodeMirror-hints {
+    background-color: #309F87;
+}
+.CodeMirror-hint {
+    background-color: #309f50;
+}
+.CodeMirror-hint-active {
+    background-color: #9f3080;
+    color: #30809f;
+}
+
 .loading {
   position: absolute;
   top: 50%;

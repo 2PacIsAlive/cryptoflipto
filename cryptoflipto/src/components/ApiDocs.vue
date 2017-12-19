@@ -9,20 +9,30 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <template v-for="method in api">
-          <v-card hover>
-            <v-card-title primary-title>
-              <h3 class="headline mb-0" v-html="method.name"></h3> 
-              <div>
-                {{ method.description }}
-              </div>
-            </v-card-title>
-            <v-card-text>
-              <codemirror v-model="method.example" :options="getOptions(false)" @ready="setSize"></codemirror>
-            </v-card-text>
-          </v-card>
-          <hr/>
-        </template>
+        <div> 
+          <template v-for="method in api">
+            <v-card hover>
+              <v-card-title primary-title>
+                <div>
+                  <a :id="method.tag"></a>
+                  <h3 class="headline mb-0" v-html="method.name"></h3>
+                  <div v-text="method.description"></div>
+                  <p v-for="arg in method.args" v-html="args[arg]"></p>
+                </div>
+              </v-card-title>
+              <v-card-text>
+                <div>
+                  <codemirror v-model="method.example" :options="getOptions(true)" @ready="setSize"></codemirror>
+                </div>  
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer/>
+                <v-btn outline @click.native="tryIt(method.example)">try it</v-btn>
+              </v-card-actions>
+            </v-card>
+            <hr/>
+          </template>
+        </div>  
       </v-card-text>
       <v-card-actions>
         <v-btn flat outline @click.native="toRoot()">write script</v-btn>
@@ -43,40 +53,42 @@ export default {
   name: 'ApiDocs',
   data () {
     return {
+      args: {
+        pair: '<i>pair</i>: a currency pair (see <a href="/#/docs#getPairs">api.getPairs()</a>)',
+        market: '<i>market</i>: a cryptocurrency trading-place (see <a href="/#/docs#getMarkets">api.getMarkets()</a>)',
+        asset: '<i>asset</i>: a currency (crypto or fiat) (see <a href="/#/docs#getAssets">api.getAssets()</a>)'
+      },
       api: [
         {
           name: '<pre><code>getPrice(<i>pair</i>, <i>market</i>)</code></pre>',
-          example: `api.getPrice("btcusd", "gdax")\n12533`,
-          description: 'Retrieve the last price for the specified pair at the specified market'
+          tag: 'getPrice',
+          example: `api.getPrice("btcusd", "gdax")`,
+          description: 'Retrieve the last price for the specified pair at the specified market',
+          args: ['pair', 'market']
         }, {
           name: '<pre><code>getMarket(<i>market</i>)</code></pre>',
-          example: `api.getMarket("gdax")
-[
-    "btcusd",
-    "btceur",
-    "btcgbp",
-    "ethusd",
-    "ethbtc",
-    "ltcusd",
-    "ltcbtc",
-    "etheur",
-    "ltceur"
-]`,
-          description: 'Retrieve a list of the pairs traded at the specified market'
+          tag: 'getMarket',
+          example: `api.getMarket("gdax")`,
+          description: 'Retrieve a list of the pairs traded at the specified market',
+          args: ['market']
         }, {
           name: '<pre><code>getAsset(<i>asset</i>)</code></pre>',
-          example: `api.getAsset("doge")
-[
-    {
-        "market": "kraken",
-        "pair": "dogebtc"
-    },
-    {
-        "market": "poloniex",
-        "pair": "dogebtc"
-    }
-]`,
-          description: 'Retrieve a list of markets and the pairs they trade for the specified asset'
+          tag: 'getAsset',
+          example: `api.getAsset("btc")`,
+          description: 'Retrieve a list of markets and the pairs they trade for the specified asset',
+          args: ['asset']
+        }, {
+          name: '<pre><code>getAssets()</code></pre>',
+          tag: 'getAssets',
+          example: `api.getAssets()`,
+          description: 'Retrieve a list of all supported currencies (crypto and fiat)',
+          args: []
+        }, {
+          name: '<pre><code>getMarkets()</code></pre>',
+          tag: 'getMarkets',
+          example: `api.getMarkets()`,
+          description: 'Retrieve a list of all supported trading-places',
+          args: []
         }
       ]
     }
@@ -87,6 +99,9 @@ export default {
   methods: {
     toRoot () {
       this.$router.push('/')
+    },
+    tryIt (example) {
+      this.$router.push(`/?script=module.exports = function() { return ${example} }`)
     },
     setSize (cm) {
       cm.setSize(null, '100%')
@@ -135,45 +150,5 @@ a {
   width: 100%; 
   height: 100%;
   viewportMargin: Infinity;
-}
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-.loading-bar {
-  display: inline-block;
-  width: 2px;
-  height: 14px;
-  border-radius: 2px;
-  animation: loading 1s ease-in-out infinite;
-}
-.loading-bar:nth-child(1) {
-  background-color: #309F87;
-  animation-delay: 0;
-}
-.loading-bar:nth-child(2) {
-  background-color: #309f50;
-  animation-delay: 0.09s;
-}
-.loading-bar:nth-child(3) {
-  background-color: #30809f;
-  animation-delay: .18s;
-}
-.loading-bar:nth-child(4) {
-  background-color: #9f3080;
-  animation-delay: .27s;
-}
-
-@keyframes loading {
-  0% {
-    transform: scale(1);
-  }
-  20% {
-    transform: scale(1, 2.2);
-  }
-  40% {
-    transform: scale(1);
-  }
 }
 </style>
