@@ -17,7 +17,7 @@ module.exports = {
       })
     },
     trix: function(data, period, callback) {
-      tulind.indicators.trix.indicator([data]. [period], function(err, results) {
+      tulind.indicators.trix.indicator([data], [period], function(err, results) {
         callback(results[0])
       })
     },
