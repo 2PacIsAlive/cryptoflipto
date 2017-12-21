@@ -160,11 +160,9 @@ export default {
     testScript () {
       const that = this
       that.loadingResult = true
-      console.log(`deploying: ${that.scriptText}`)
       axios.post('http://0.0.0.0:8082/script', {
         script: that.scriptText
       }).then(function (res) {
-        console.log(res)
         that.result = JSON.stringify(res.data.result, undefined, 4)
         that.cpuTimeUsed += res.data.cpuTimeUsed
         that.loadingResult = false
