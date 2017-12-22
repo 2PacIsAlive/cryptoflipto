@@ -6,7 +6,6 @@
         <div>
           <h3 class="headline mb-0">crypto&#607;l&#7433;d&#647;o</h3>
           <div>flip yo crypto like a pro</div>
-	        <div>CPU time used: {{ cpuTimeUsed }} nanoseconds</div>
         </div>
       </v-card-title>
       <v-card-text>
@@ -125,7 +124,6 @@ export default {
   data () {
     return {
       loadingResultDISABLED: false,
-      cpuTimeUsed: 0,
       scriptText: this.script,
       authenticated: false,
       result: null,
@@ -160,11 +158,10 @@ export default {
     testScript () {
       const that = this
       that.loadingResult = true
-      axios.post('http://0.0.0.0:8082/script', {
+      axios.post('http://cryptoflipto.cool/api/script', {
         script: that.scriptText
       }).then(function (res) {
         that.result = JSON.stringify(res.data.result, undefined, 4)
-        that.cpuTimeUsed += res.data.cpuTimeUsed
         that.loadingResult = false
         that.hasResult = true
       }).catch(function (e) {

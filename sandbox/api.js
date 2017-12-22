@@ -3,7 +3,6 @@ const request = require('sync-request')
 const dns = require('dns')
 const tulind = require('tulind')
 const twilio = require('twilio')
-const logger = require('./logger')
 
 const cryptowatch = 'https://api.cryptowat.ch'
 
@@ -14,8 +13,6 @@ const twilioNumber = process.env.TWILIO_NUMBER
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
 module.exports = {
-  log: logger,
-  _cpuTimeUsed: 0,
   notifier: {
     sendText(number, message) {
       twilioClient.messages.create({
@@ -102,7 +99,6 @@ module.exports = {
   },
   getCandles: function(pair, market, period) {
     var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}/${pair}/ohlc\?periods=${period}`).getBody('utf8'))
-    this._cpuTimeUsed += response.allowance.cost
     return response.result[period.toString()].map(function (result) {
       return {
         time : result[0], // close time
@@ -116,7 +112,6 @@ module.exports = {
   },
   getAssets: function() {
     var response = JSON.parse(request('GET', `${cryptowatch}/assets`).getBody('utf8'))
-    this._cpuTimeUsed += response.allowance.cost
     return response.result.map(function (result) {
       return {
         fiat: result.fiat,
@@ -127,7 +122,6 @@ module.exports = {
   },
   getAsset: function(asset) {
   	var response = JSON.parse(request('GET', `${cryptowatch}/assets/${asset}`).getBody('utf8'))
-  	this._cpuTimeUsed += response.allowance.cost
   	return response.result.markets.base.map(function (result) {
       return {
         market: result.exchange,
@@ -137,7 +131,6 @@ module.exports = {
   },
   getMarkets: function() {
     var response = JSON.parse(request('GET', `${cryptowatch}/markets`).getBody('utf8'))
-    this._cpuTimeUsed += response.allowance.cost
     var marketPairs = response.result.map(function (result) {
       if (result.active) {
         return {
@@ -154,14 +147,12 @@ module.exports = {
   },
   getMarket: function(market) {
   	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}`).getBody('utf8'))
-  	this._cpuTimeUsed += response.allowance.cost
   	return response.result.map(function (result) {
       return result.pair
     })
   },
   getPrice: function(pair, market) {
   	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}/${pair}/price`).getBody('utf8'))
-  	this._cpuTimeUsed += response.allowance.cost
   	return response.result.price
   }
 }

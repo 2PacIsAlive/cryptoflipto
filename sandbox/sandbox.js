@@ -1,4 +1,4 @@
-const {VM, VMScript} = require('vm2')
+const {NodeVM, VMScript} = require('vm2')
 const api = require('./api')
 
 module.exports = {
