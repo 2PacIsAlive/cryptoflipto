@@ -12,20 +12,6 @@ const twilioNumber = process.env.TWILIO_NUMBER
 
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
-<<<<<<< Updated upstream
-module.exports = {
-  notifier: {
-    sendText(number, message) {
-      twilioClient.messages.create({
-        body: message,
-        to: number, 
-        from: twilioNumber
-      })
-      .then((message) => console.log(`sent message: ${message.sid}`));
-    }
-  },
-  indicators: {
-=======
 module.exports = function(isAuthenticated) {
   var api = {}
   
@@ -37,13 +23,11 @@ module.exports = function(isAuthenticated) {
           to: number, 
           from: twilioNumber
         })
-        .then((message) => console.log(`sent message: ${message.sid}`));
       }
     }  
   }
   
   api.indicators = {
->>>>>>> Stashed changes
     moneyFlowIndex: function(high, low, close, volume, period, callback) {
       tulind.indicators.mfi.indicator([high, low, close, volume], [period], function(err, results) {
         // above 80 = overbought, below 20 = oversold
@@ -117,45 +101,6 @@ module.exports = function(isAuthenticated) {
         })
       })
     }
-<<<<<<< Updated upstream
-  },
-  getCandles: function(pair, market, period) {
-    var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}/${pair}/ohlc\?periods=${period}`).getBody('utf8'))
-    return response.result[period.toString()].map(function (result) {
-      return {
-        time : result[0], // close time
-        open : result[1], 
-        high : result[2], 
-        low : result[3],
-        close : result[4],
-        volume : result[5]
-      }
-    })
-  },
-  getAssets: function() {
-    var response = JSON.parse(request('GET', `${cryptowatch}/assets`).getBody('utf8'))
-    return response.result.map(function (result) {
-      return {
-        fiat: result.fiat,
-        name: result.name,
-        symbol: result.symbol
-      }
-    })
-  },
-  getAsset: function(asset) {
-  	var response = JSON.parse(request('GET', `${cryptowatch}/assets/${asset}`).getBody('utf8'))
-  	return response.result.markets.base.map(function (result) {
-      return {
-        market: result.exchange,
-        pair: result.pair
-      }
-    })
-  },
-  getMarkets: function() {
-    var response = JSON.parse(request('GET', `${cryptowatch}/markets`).getBody('utf8'))
-    var marketPairs = response.result.map(function (result) {
-      if (result.active) {
-=======
   }
 
   api.data = {
@@ -175,9 +120,7 @@ module.exports = function(isAuthenticated) {
     },
     assets: function() {
       var response = JSON.parse(request('GET', `${cryptowatch}/assets`).getBody('utf8'))
-      this._cpuTimeUsed += response.allowance.cost
       return response.result.map(function (result) {
->>>>>>> Stashed changes
         return {
           fiat: result.fiat,
           name: result.name,
@@ -187,7 +130,6 @@ module.exports = function(isAuthenticated) {
     },
     asset: function(asset) {
     	var response = JSON.parse(request('GET', `${cryptowatch}/assets/${asset}`).getBody('utf8'))
-    	this._cpuTimeUsed += response.allowance.cost
     	return response.result.markets.base.map(function (result) {
         return {
           market: result.exchange,
@@ -197,7 +139,6 @@ module.exports = function(isAuthenticated) {
     },
     markets: function() {
       var response = JSON.parse(request('GET', `${cryptowatch}/markets`).getBody('utf8'))
-      this._cpuTimeUsed += response.allowance.cost
       var marketPairs = response.result.map(function (result) {
         if (result.active) {
           return {
@@ -214,33 +155,15 @@ module.exports = function(isAuthenticated) {
     },
     market: function(market) {
     	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}`).getBody('utf8'))
-    	this._cpuTimeUsed += response.allowance.cost
     	return response.result.map(function (result) {
         return result.pair
       })
     },
     price: function(pair, market) {
     	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}/${pair}/price`).getBody('utf8'))
-    	this._cpuTimeUsed += response.allowance.cost
     	return response.result.price
     }
-<<<<<<< Updated upstream
-    return markets
-  },
-  getMarket: function(market) {
-  	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}`).getBody('utf8'))
-  	return response.result.map(function (result) {
-      return result.pair
-    })
-  },
-  getPrice: function(pair, market) {
-  	var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}/${pair}/price`).getBody('utf8'))
-  	return response.result.price
-  }
-}
-=======
   }
   
   return api  
 }
->>>>>>> Stashed changes
