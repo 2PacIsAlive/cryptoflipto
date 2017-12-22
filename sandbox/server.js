@@ -16,10 +16,9 @@ app.use(helmet())
 app.use(cors())
 app.disable('x-powered-by')
 
-
 app.post('/script', (req, res) => {
   try {
-  	var execution = sandbox.execute(req.body.script)
+  	var execution = sandbox.execute(req.body.script, false)
   	var result = execution.result
   	var cpuTimeUsed = execution.cpuTimeUsed
   } catch (e) {
