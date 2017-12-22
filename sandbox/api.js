@@ -1,13 +1,31 @@
-const request = require("sync-request")
-const dns = require("dns")
+const dotenv = require('dotenv').config()
+const request = require('sync-request')
+const dns = require('dns')
 const tulind = require('tulind')
-const logger = require("./logger")
+const twilio = require('twilio')
+const logger = require('./logger')
 
-const cryptowatch = "https://api.cryptowat.ch"
+const cryptowatch = 'https://api.cryptowat.ch'
+
+const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID
+const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN
+const twilioNumber = process.env.TWILIO_NUMBER
+
+const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
 module.exports = {
   log: logger,
   _cpuTimeUsed: 0,
+  notifier: {
+    sendText(number, message) {
+      twilioClient.messages.create({
+        body: message,
+        to: number, 
+        from: twilioNumber
+      })
+      .then((message) => console.log(`sent message: ${message.sid}`));
+    }
+  },
   indicators: {
     moneyFlowIndex: function(high, low, close, volume, period, callback) {
       tulind.indicators.mfi.indicator([high, low, close, volume], [period], function(err, results) {
