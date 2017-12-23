@@ -40,16 +40,11 @@ module.exports = {
       return response.result
         .filter(function (result) {
           return result.active    
-        }).map(function (result) {
-          return {
-            market: result.market,
-            pair: result.pair
-          }
         }).reduce(function(markets, marketPair) {
           if (markets[marketPair.market]) {
             markets[marketPair.market].push(marketPair.pair)
           } else {
-            markets[marketPair].market = [marketPair.pair]
+            markets[marketPair.market] = [marketPair.pair]
           }
           return markets
         })
