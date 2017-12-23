@@ -57,43 +57,55 @@ export default {
   data () {
     return {
       args: {
-        pair: '<i>pair</i>: a currency pair (see <a href="/#/docs#getPairs">api.getPairs()</a>)',
-        market: '<i>market</i>: a cryptocurrency trading-place (see <a href="/#/docs#getMarkets">api.getMarkets()</a>)',
-        asset: '<i>asset</i>: a currency (crypto or fiat) (see <a href="/#/docs#getAssets">api.getAssets()</a>)'
+        pair: '<i>pair</i>: a currency pair (see <a href="/docs#pairs">api.data.pairs()</a>)',
+        market: '<i>market</i>: a cryptocurrency trading-place (see <a href="/docs#markets">api.data.markets()</a>)',
+        asset: '<i>asset</i>: a currency (crypto or fiat) (see <a href="/docs#assets">api.data.assets()</a>)'
       },
       api: {
         data: [
           {
-            name: '<pre><code>getPrice(<i>pair</i>, <i>market</i>)</code></pre>',
-            tag: 'getPrice',
-            example: `api.getPrice("btcusd", "gdax")`,
+            name: '<pre><code>price(<i>pair</i>, <i>market</i>)</code></pre>',
+            tag: 'price',
+            example: `api.data.price("btcusd", "gdax")`,
             description: 'Retrieve the last price for the specified pair at the specified market',
             args: ['pair', 'market']
           }, {
-            name: '<pre><code>getMarket(<i>market</i>)</code></pre>',
-            tag: 'getMarket',
-            example: `api.getMarket("gdax")`,
+            name: '<pre><code>market(<i>market</i>)</code></pre>',
+            tag: 'market',
+            example: `api.data.market("gdax")`,
             description: 'Retrieve a list of the pairs traded at the specified market',
             args: ['market']
           }, {
-            name: '<pre><code>getAsset(<i>asset</i>)</code></pre>',
-            tag: 'getAsset',
-            example: `api.getAsset("btc")`,
+            name: '<pre><code>asset(<i>asset</i>)</code></pre>',
+            tag: 'asset',
+            example: `api.data.asset("btc")`,
             description: 'Retrieve a list of markets and the pairs they trade for the specified asset',
             args: ['asset']
           }, {
-            name: '<pre><code>getAssets()</code></pre>',
-            tag: 'getAssets',
-            example: `api.getAssets()`,
+            name: '<pre><code>assets()</code></pre>',
+            tag: 'assets',
+            example: `api.data.assets()`,
             description: 'Retrieve a list of all supported currencies (crypto and fiat)',
             args: []
           }, {
-            name: '<pre><code>getMarkets()</code></pre>',
-            tag: 'getMarkets',
-            example: `api.getMarkets()`,
+            name: '<pre><code>markets()</code></pre>',
+            tag: 'markets',
+            example: `api.data.markets()`,
             description: 'Retrieve a list of all supported trading-places',
             args: []
           }
+        ],
+        indicators: [
+          {
+            name: '<pre><code>moneyFlowIndex(<i>high</i>, <i>low</i>, <i>close</i>, <i>volume</i>, <i>period</i>, <i>callback</i>)</code></pre>',
+            tag: 'moneyFlowIndex',
+            example: `var indicator;\nvar candles = api.data.candles("btcusd", "gdax", 86400);\napi.indicators.moneyFlowIndex(\n\tcandles.map(function(candle) { return candle.high }),\n\tcandles.map(function(candle) { return candle.low }),\n\tcandles.map(function(candle) { return candle.close }),\n\tcandles.map(function(candle) { return candle.volume }),\n\t14\n\tfunction (result) { indicator = result })\n)return indicator`,
+            description: 'Retrieve the last price for the specified pair at the specified market',
+            args: ['high', 'low', 'close', 'volume', 'period', 'callback']
+          }
+        ],
+        overlays: [
+
         ]
       }
     }
