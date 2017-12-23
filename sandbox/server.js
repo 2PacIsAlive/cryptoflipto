@@ -18,7 +18,7 @@ app.disable('x-powered-by')
 
 app.post('/script', (req, res) => {
   try {
-  	var execution = sandbox.execute(req.body.script, false)
+  	var execution = sandbox.execute(req.body.script, req.body.authenticated, req.body.authentication)
   	var result = execution.result
   	var cpuTimeUsed = execution.cpuTimeUsed
   } catch (e) {

@@ -9,16 +9,6 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <template v-if="loadingResultDISABLED">
-          <v-container>
-            <div class="loading">
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-            </div>
-          </v-container>
-        </template>
 	      <template>
           <v-container fluid>
             <codemirror v-model="scriptText" :options="getOptions(false)" @ready="onCmReady"></codemirror>
@@ -67,65 +57,14 @@ import 'codemirror/theme/mbo.css'
 
 export default {
   name: 'Editor',
-  props: {
-    script: {
-      default: `module.exports = function() {
-  const capital = 100.00
-  const prices = {
-    ltcusd: {
-      gdax: api.getPrice("ltcusd", "gdax")
-    }, 
-    btcusd: {
-      gdax: api.getPrice("btcusd", "gdax")
-    },
-    ltcbtc: {
-      kraken: api.getPrice("ltcbtc", "kraken")
-    }
-  }
-  const ltcQty = capital / prices.ltcusd.gdax
-  const btcQty = ltcQty * prices.ltcbtc.kraken
-  const usdQty = btcQty * prices.btcusd.gdax 
-  return {
-    trades: [
-      {
-        pair: "ltcusd",
-        side: "buy",
-        exchange: "gdax",
-        cost: capital,
-        quantity: ltcQty,
-        price: prices.ltcusd.gdax
-      },{
-        pair: "ltcbtc",
-        side: "sell",
-        exchange: "kraken",
-        quantity: btcQty,
-        cost: ltcQty,
-        price: prices.ltcbtc.kraken
-      }, {
-        pair: "btcusd",
-        side: "sell",
-        exchange: "gdax",
-        quantity: usdQty,
-        cost: btcQty,
-        price: prices.btcusd.gdax
-      }
-    ],  
-    result: {
-      asset: "usd",
-      quantity: usdQty,
-      profit: usdQty - capital,
-      exchange: "gdax"
-    } 
-  }
-}`,
-      type: String
-    }
-  },
+  props: [
+    'auth',
+    'authenticated',
+    'script'
+  ],
   data () {
     return {
-      loadingResultDISABLED: false,
       scriptText: this.script,
-      authenticated: false,
       result: null,
       loadingResult: false,
       hasResult: false
@@ -159,7 +98,9 @@ export default {
       const that = this
       that.loadingResult = true
       axios.post('http://cryptoflipto.cool/api/script', {
-        script: that.scriptText
+        script: that.scriptText,
+        auth: that.auth,
+        authenticated: that.authenticated
       }).then(function (res) {
         that.result = JSON.stringify(res.data.result, undefined, 4)
         that.loadingResult = false
@@ -220,46 +161,5 @@ a {
 .CodeMirror-hint-active {
     background-color: #9f3080;
     color: #30809f;
-}
-
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-.loading-bar {
-  display: inline-block;
-  width: 2px;
-  height: 14px;
-  border-radius: 2px;
-  animation: loading 1s ease-in-out infinite;
-}
-.loading-bar:nth-child(1) {
-  background-color: #309F87;
-  animation-delay: 0;
-}
-.loading-bar:nth-child(2) {
-  background-color: #309f50;
-  animation-delay: 0.09s;
-}
-.loading-bar:nth-child(3) {
-  background-color: #30809f;
-  animation-delay: .18s;
-}
-.loading-bar:nth-child(4) {
-  background-color: #9f3080;
-  animation-delay: .27s;
-}
-
-@keyframes loading {
-  0% {
-    transform: scale(1);
-  }
-  20% {
-    transform: scale(1, 2.2);
-  }
-  40% {
-    transform: scale(1);
-  }
 }
 </style>
