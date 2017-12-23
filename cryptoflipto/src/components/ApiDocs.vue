@@ -18,7 +18,7 @@
                   <div>
                     <a :id="method.tag"></a>
                     <h3 class="headline mb-0" v-html="method.name"></h3>
-                    <div v-text="method.description"></div>
+                    <h4 v-text="method.description"></h4>
                     <p v-for="arg in method.args" v-html="args[arg]"></p>
                   </div>
                 </v-card-title>
@@ -34,6 +34,7 @@
               </v-card>
               <hr/>
             </template>
+	    <br></br>
           </template>
         </div>  
       </v-card-text>
@@ -59,49 +60,51 @@ export default {
       args: {
         pair: '<i>pair</i>: a currency pair (see <a href="/docs#pairs">api.data.pairs()</a>)',
         market: '<i>market</i>: a cryptocurrency trading-place (see <a href="/docs#markets">api.data.markets()</a>)',
-        asset: '<i>asset</i>: a currency (crypto or fiat) (see <a href="/docs#assets">api.data.assets()</a>)'
+        asset: '<i>asset</i>: a currency (crypto or fiat) (see <a href="/docs#assets">api.data.assets()</a>)',
+        candles: '<i>candles</i>: a list of candles (see <a href="/docs#candles">api.data.candles()</a>)',
+        period: '<i>period</i>: the period over which to compute the indicator'
       },
       api: {
         data: [
           {
             name: '<pre><code>price(<i>pair</i>, <i>market</i>)</code></pre>',
             tag: 'price',
-            example: `api.data.price("btcusd", "gdax")`,
+            example: `\treturn api.data.price("btcusd", "gdax")`,
             description: 'Retrieve the last price for the specified pair at the specified market',
             args: ['pair', 'market']
           }, {
             name: '<pre><code>market(<i>market</i>)</code></pre>',
             tag: 'market',
-            example: `api.data.market("gdax")`,
+            example: `\treturn api.data.market("gdax")`,
             description: 'Retrieve a list of the pairs traded at the specified market',
             args: ['market']
           }, {
             name: '<pre><code>asset(<i>asset</i>)</code></pre>',
             tag: 'asset',
-            example: `api.data.asset("btc")`,
+            example: `\treturn api.data.asset("btc")`,
             description: 'Retrieve a list of markets and the pairs they trade for the specified asset',
             args: ['asset']
           }, {
             name: '<pre><code>assets()</code></pre>',
             tag: 'assets',
-            example: `api.data.assets()`,
+            example: `\treturn api.data.assets()`,
             description: 'Retrieve a list of all supported currencies (crypto and fiat)',
             args: []
           }, {
             name: '<pre><code>markets()</code></pre>',
             tag: 'markets',
-            example: `api.data.markets()`,
+            example: `\treturn api.data.markets()`,
             description: 'Retrieve a list of all supported trading-places',
             args: []
           }
         ],
         indicators: [
           {
-            name: '<pre><code>moneyFlowIndex(<i>high</i>, <i>low</i>, <i>close</i>, <i>volume</i>, <i>period</i>, <i>callback</i>)</code></pre>',
+            name: '<pre><code>moneyFlowIndex(<i>candles</i>, <i>period</i>, <i>callback</i>)</code></pre>',
             tag: 'moneyFlowIndex',
-            example: `var indicator;\nvar candles = api.data.candles("btcusd", "gdax", 86400);\napi.indicators.moneyFlowIndex(\n\tcandles.map(function(candle) { return candle.high }),\n\tcandles.map(function(candle) { return candle.low }),\n\tcandles.map(function(candle) { return candle.close }),\n\tcandles.map(function(candle) { return candle.volume }),\n\t14\n\tfunction (result) { indicator = result })\n)return indicator`,
+            example: `\tvar indicator\n\tvar candles = api.data.candles("btcusd", "gdax", 60 * 60 * 24)\n\tapi.indicators.moneyFlowIndex(candles, 14, function (result) { indicator = result })\n\treturn indicator`,
             description: 'Retrieve the last price for the specified pair at the specified market',
-            args: ['high', 'low', 'close', 'volume', 'period', 'callback']
+            args: ['candles', 'period', 'callback']
           }
         ],
         overlays: [
@@ -118,7 +121,7 @@ export default {
       this.$router.push('/')
     },
     tryIt (example) {
-      this.$router.push(`/?script=module.exports = function() { return ${example} }`)
+      this.$router.push(`/?script=module.exports = function() {\n${example}\n}`)
     },
     setSize (cm) {
       cm.setSize(null, '100%')
@@ -160,6 +163,10 @@ li {
 }
 a {
   color: #42b983;
+}
+p {
+  margin: 0;
+  padding: 0;
 }
 .CodeMirror {
   border: 1px solid #eee;

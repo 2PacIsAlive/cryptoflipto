@@ -1,10 +1,9 @@
-const request = require('sync-request')
-
-const cryptowatch = 'https://api.cryptowat.ch'
+const request = require('request')
 
 module.exports = {
     candles: function(pair, market, period) {
       var response = JSON.parse(request('GET', `${cryptowatch}/markets/${market}/${pair}/ohlc\?periods=${period}`).getBody('utf8'))
+      this._cpuTimeUsed += response.allowance.cost
       return response.result[period.toString()].map(function (result) {
         return {
           time : result[0], // close time
