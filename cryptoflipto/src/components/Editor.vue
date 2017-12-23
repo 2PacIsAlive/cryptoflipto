@@ -35,7 +35,7 @@
           <v-btn v-if="authenticated" outline>deploy</v-btn>
         </template>
         <template v-else>  
-          <v-btn disabled outline slot="activator">authenticate to deploy</v-btn>
+          <v-btn disabled outline slot="activator">log in to deploy</v-btn>
         </v-tooltip>
         </template>  
       </v-card-actions>
@@ -98,16 +98,18 @@ export default {
       const that = this
       that.loadingResult = true
       axios.post('http://cryptoflipto.cool/api/script', {
-        script: that.scriptText,
-        auth: that.auth,
-        authenticated: that.authenticated
+        script: that.scriptText
       }).then(function (res) {
         that.result = JSON.stringify(res.data.result, undefined, 4)
         that.loadingResult = false
         that.hasResult = true
       }).catch(function (e) {
         console.log(e)
-        that.result = e.toString()
+        try {
+          that.result = e.toString()
+        } catch (err) {
+          that.result = 'Unexpected exception occured, check console for details'
+        }
         that.loadingResult = false
         that.hasResult = true
       })
@@ -120,6 +122,12 @@ export default {
     },
     onKeyEvent: function (e) {
       CodeMirror.showHint(e)
+    }
+  },
+  created: function () {
+    console.log(this.script)
+    if (!this.script) {
+      this.scriptText = `module.exports = function () {\n\treturn api.data.candles("btcusd", "gdax", 86400)\n}`
     }
   }
 }

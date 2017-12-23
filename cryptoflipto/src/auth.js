@@ -17,7 +17,7 @@ export default class AuthService {
   auth0 = new auth0.WebAuth({
     domain: 'cryptoflipto.auth0.com',
     clientID: 'mpBPMzLgJ3181FzV2hy58LaDV3HL5M0m',
-    redirectUri: 'http://localhost:8081/callback',
+    redirectUri: 'http://cryptoflipto.cool/callback',
     audience: 'https://cryptoflipto.auth0.com/userinfo',
     responseType: 'token id_token',
     scope: 'openid'

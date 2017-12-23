@@ -10,27 +10,30 @@
       </v-card-title>
       <v-card-text>
         <div> 
-          <template v-for="method in api">
-            <v-card hover>
-              <v-card-title primary-title>
-                <div>
-                  <a :id="method.tag"></a>
-                  <h3 class="headline mb-0" v-html="method.name"></h3>
-                  <div v-text="method.description"></div>
-                  <p v-for="arg in method.args" v-html="args[arg]"></p>
-                </div>
-              </v-card-title>
-              <v-card-text>
-                <div>
-                  <codemirror v-model="method.example" :options="getOptions(true)" @ready="setSize"></codemirror>
-                </div>  
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer/>
-                <v-btn outline @click.native="tryIt(method.example)">try it</v-btn>
-              </v-card-actions>
-            </v-card>
-            <hr/>
+          <template v-for="module in Object.keys(api)">
+            <h1>&#8669; {{ module }}</h1>
+            <template v-for="method in api[module]">
+              <v-card hover>
+                <v-card-title primary-title>
+                  <div>
+                    <a :id="method.tag"></a>
+                    <h3 class="headline mb-0" v-html="method.name"></h3>
+                    <div v-text="method.description"></div>
+                    <p v-for="arg in method.args" v-html="args[arg]"></p>
+                  </div>
+                </v-card-title>
+                <v-card-text>
+                  <div>
+                    <codemirror v-model="method.example" :options="getOptions(true)" @ready="setSize"></codemirror>
+                  </div>  
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer/>
+                  <v-btn outline @click.native="tryIt(method.example)">try it</v-btn>
+                </v-card-actions>
+              </v-card>
+              <hr/>
+            </template>
           </template>
         </div>  
       </v-card-text>
@@ -58,39 +61,41 @@ export default {
         market: '<i>market</i>: a cryptocurrency trading-place (see <a href="/#/docs#getMarkets">api.getMarkets()</a>)',
         asset: '<i>asset</i>: a currency (crypto or fiat) (see <a href="/#/docs#getAssets">api.getAssets()</a>)'
       },
-      api: [
-        {
-          name: '<pre><code>getPrice(<i>pair</i>, <i>market</i>)</code></pre>',
-          tag: 'getPrice',
-          example: `api.getPrice("btcusd", "gdax")`,
-          description: 'Retrieve the last price for the specified pair at the specified market',
-          args: ['pair', 'market']
-        }, {
-          name: '<pre><code>getMarket(<i>market</i>)</code></pre>',
-          tag: 'getMarket',
-          example: `api.getMarket("gdax")`,
-          description: 'Retrieve a list of the pairs traded at the specified market',
-          args: ['market']
-        }, {
-          name: '<pre><code>getAsset(<i>asset</i>)</code></pre>',
-          tag: 'getAsset',
-          example: `api.getAsset("btc")`,
-          description: 'Retrieve a list of markets and the pairs they trade for the specified asset',
-          args: ['asset']
-        }, {
-          name: '<pre><code>getAssets()</code></pre>',
-          tag: 'getAssets',
-          example: `api.getAssets()`,
-          description: 'Retrieve a list of all supported currencies (crypto and fiat)',
-          args: []
-        }, {
-          name: '<pre><code>getMarkets()</code></pre>',
-          tag: 'getMarkets',
-          example: `api.getMarkets()`,
-          description: 'Retrieve a list of all supported trading-places',
-          args: []
-        }
-      ]
+      api: {
+        data: [
+          {
+            name: '<pre><code>getPrice(<i>pair</i>, <i>market</i>)</code></pre>',
+            tag: 'getPrice',
+            example: `api.getPrice("btcusd", "gdax")`,
+            description: 'Retrieve the last price for the specified pair at the specified market',
+            args: ['pair', 'market']
+          }, {
+            name: '<pre><code>getMarket(<i>market</i>)</code></pre>',
+            tag: 'getMarket',
+            example: `api.getMarket("gdax")`,
+            description: 'Retrieve a list of the pairs traded at the specified market',
+            args: ['market']
+          }, {
+            name: '<pre><code>getAsset(<i>asset</i>)</code></pre>',
+            tag: 'getAsset',
+            example: `api.getAsset("btc")`,
+            description: 'Retrieve a list of markets and the pairs they trade for the specified asset',
+            args: ['asset']
+          }, {
+            name: '<pre><code>getAssets()</code></pre>',
+            tag: 'getAssets',
+            example: `api.getAssets()`,
+            description: 'Retrieve a list of all supported currencies (crypto and fiat)',
+            args: []
+          }, {
+            name: '<pre><code>getMarkets()</code></pre>',
+            tag: 'getMarkets',
+            example: `api.getMarkets()`,
+            description: 'Retrieve a list of all supported trading-places',
+            args: []
+          }
+        ]
+      }
     }
   },
   components: {
